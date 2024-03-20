@@ -3,24 +3,25 @@ import pandas as pd
 import json
 
 df_dict = {}
+data_directory = '../../data/raw/'
 path_dict = {
-    'profile': '../data/raw/Profile.csv',
-    'respiratory_rate': '../data/raw/breath/rr/rr_summary/',
-    'vo2_max': '../data/raw/breath/demographic_vo2max/',
-    'oxygen_variation': '../data/raw/breath/oxygen_variation/',
-    'spo2_daily': '../data/raw/breath/spo2/daily_spo2/',
-    'spo2_intraday': '../data/raw/breath/spo2/minute_spo2/',
-    'afib_ecg': '../data/raw/heart/afib_ecg/',
-    'heart_rate': '../data/raw/heart/hr/',
-    'hrv_summary': '../data/raw/heart/hrv/hrv_summary/',
-    'hrv_histogram': '../data/raw/heart/hrv/hrv_histogram/',
-    'hrv_details': '../data/raw/heart/hrv/hrv_details/',
-    'time_in_hr_zones': '../data/raw/heart/time_in_hr_zones/',
-    'sleep_profile': '../data/raw/sleep/Sleep Profile.csv',
-    'sleep_score': '../data/raw/sleep/sleep_score.csv',
-    'sleep_json': '../data/raw/sleep/json/',
-    'stress': '../data/raw/stress/Stress Score.csv',
-    'weight': '../data/raw/weight/'
+    'profile': 'Profile.csv',
+    'rr': 'breath/rr/rr_summary/',
+    'vo2_max': 'breath/demographic_vo2max/',
+    'ox_var': 'breath/oxygen_variation/',
+    'spo2_daily': 'breath/spo2/daily_spo2/',
+    'spo2_intraday': 'breath/spo2/minute_spo2/',
+    'afib_ecg': 'heart/afib_ecg/',
+    'hr': 'heart/hr/',
+    'hrv_summary': 'heart/hrv/hrv_summary/',
+    'hrv_histogram': 'heart/hrv/hrv_histogram/',
+    'hrv_details': 'heart/hrv/hrv_details/',
+    'time_in_hr_zones': 'heart/time_in_hr_zones/',
+    'sleep_profile': 'sleep/Sleep Profile.csv',
+    'sleep_score': 'sleep/sleep_score.csv',
+    'sleep_json': 'sleep/json/',
+    'stress': 'stress/Stress Score.csv',
+    'weight': 'weight/'
 }
 
 
@@ -55,9 +56,12 @@ def fitbit_data_handler(path_string):
 
 # ============================== PROCESS FILES ==============================
 for name, path in path_dict.items():
-    df_dict[name] = fitbit_data_handler(path)
+    whole_path = os.path.join(data_directory, path)
+    df_dict[name] = fitbit_data_handler(whole_path)
 
 # ================================ SAVE FILES ===============================
-output_directory = '../data/processed/'
+output_directory = '../../data/processed/csv/'
 for name, df in df_dict.items():
     df.to_csv(f'{output_directory}{name}.csv', index=False)
+
+pd.to_pickle(df_dict, '../../data/processed/pickle/fitbit_data.pkl')
